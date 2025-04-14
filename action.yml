@@ -18,16 +18,30 @@ inputs:
     description: "ZeroTier Central API URL"
     required: false
     default: "https://my.zerotier.com/api/v1"
+  tags:
+    description: >
+      When provided, set tags for the network member (space-separated list of numeric "key=value" pairs).
+      The tags must be already defined on ZeroTier Central.
+    required: false
+    default: ""
+  capabilities:
+    description: >
+      When provided, set capabilities for the network member (space-separated numeric list).
+      The capabilities must be already defined on ZeroTier Central.
+    required: false
+    default: ""
 
 runs:
   using: "composite"
   steps:
     - name: zerotier
-      uses: zerotier/github-action/util/post@main
+      uses: zerotier/github-action/util/post@add-tags-and-capabilities
       env:
         API_URL: ${{ inputs.api_url }}
         AUTH_TOKEN: ${{ inputs.auth_token }}
         NETWORK_ID: ${{ inputs.network_id }}
+        TAGS: ${{ inputs.tags }}
+        CAPABILITIES: ${{ inputs.capabilities }}
       with:
         main: $GITHUB_ACTION_PATH/main.sh
         post: $GITHUB_ACTION_PATH/post.sh

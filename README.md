@@ -10,12 +10,18 @@ The ZeroTier Github Action allows users to easily integrate
 ZeroTier into their CI/CD workflows by temporarily joining and
 authorizing runners onto private ZeroTier networks.
 
+Optional tags and capabilities can be specified depending on the
+configuration of your flow rules. The tags and capabilities
+must be already defined on ZeroTier Central.
+
 ```yaml
 - name: ZeroTier
   uses: zerotier/github-action@v1.0.1
   with:
     network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
     auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+    tags: 1000=8 2000=0
+    capabilities: 10 20
 ```
 
 `ZEROTIER_CENTRAL_TOKEN` can be provisioned from `Account` section in the [ZeroTier Central](https://my.zerotier.com) admin panel.
@@ -33,7 +39,8 @@ It then uses the supplied `auth_token` to authorize the runner onto the network.
   with:
     network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
     auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
-    
+    tags: 1000=8 2000=0
+    capabilities: 10 20
 - name: ping host
   shell: bash
   run: |

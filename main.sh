@@ -21,10 +21,21 @@ echo "⏁  Authorizing Runner to ZeroTier network"
 MAX_RETRIES=10
 RETRY_COUNT=0
 
+f_tags=""
+f_capabilities=""
+
+if [ -n "$TAGS" ]; then
+    f_tags=$(echo "$TAGS" | awk '{ gsub(/ /, "], [", $0); gsub(/=/, ", ", $0); printf ", \"tags\": [ [%s] ]", $0; }')
+fi
+
+if [ -n "$CAPABILITIES" ]; then
+    f_capabilities=$(echo "$CAPABILITIES" | awk '{ gsub(/ /, ", "); printf ", \"capabilities\": [%s]", $0 }')
+fi
+
 while ! curl -s -X POST \
   -H "Authorization: token $AUTH_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"name":"Zerotier GitHub Member '"${GITHUB_SHA::7}"'", "description": "Member created by '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"'", "config":{"authorized":true}}' \
+  -d '{"name":"Zerotier GitHub Member '"${GITHUB_SHA::7}"'", "description": "Member created by '"${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"'", "config":{"authorized":true'"${f_tags}${f_capabilities}"'}}' \
   "$API_URL/network/$NETWORK_ID/member/${member_id}" | grep '"authorized":true'; do
   RETRY_COUNT=$((RETRY_COUNT + 1))
 
