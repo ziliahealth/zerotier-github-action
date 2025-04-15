@@ -35,7 +35,7 @@ runs:
   using: "composite"
   steps:
     - name: zerotier
-      uses: zerotier/github-action/util/post@add-tags-and-capabilities
+      uses: zerotier/github-action/util/post@main
       env:
         API_URL: ${{ inputs.api_url }}
         AUTH_TOKEN: ${{ inputs.auth_token }}
